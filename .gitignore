@@ -1,0 +1,26 @@
+# ─── Private Config (contains API keys) ───
+config.js
+
+# ─── Environment files ───
+.env
+.env.local
+.env.production
+
+# ─── OS files ───
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Editor files ───
+.vscode/
+.idea/
+*.suo
+*.user
+
+# ─── Node (if used) ───
+node_modules/
+npm-debug.log
+
+# ─── Build output ───
+dist/
+build/

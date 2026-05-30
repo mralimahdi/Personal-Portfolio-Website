@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Skill Wheel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --navy:      #1e294f;
+      --navy-dark: #0c1220;
+      --navy-mid:  #2d3f70;
+      --accent:    #4f8ef7;
+      --dim:       #6b7ab5;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100vh;
+      background: var(--navy-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      overflow: hidden;
+    }
+
+    /* subtle grid bg */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(rgba(79,142,247,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,142,247,.025) 1px, transparent 1px);
+      background-size: 72px 72px;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(79,142,247,.09) 0%, transparent 70%);
+    }
+
+    #wheel-wrap {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #lens-wrap {
+      position: relative;
+      width: min(520px, 88vw);
+      aspect-ratio: 1;
+      touch-action: none;
+      user-select: none;
+    }
+
+    #lens-svg { width: 100%; height: 100%; overflow: visible; }
+
+    .blade-path { cursor: pointer; transition: filter .22s; }
+
+    #arc-bg { fill: none; stroke: rgba(255,255,255,.08); stroke-width: 3; stroke-linecap: round; }
+    #arc-fg { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; }
+    #arc-thumb { cursor: grab; }
+    #arc-thumb.dragging { cursor: grabbing; }
+
+    @keyframes rip  { 0%{r:8;opacity:.65} 100%{r:22;opacity:0} }
+    @keyframes rip2 { 0%{r:5;opacity:.4}  100%{r:16;opacity:0} }
+    .rp { fill: none; stroke: var(--accent); stroke-width: 1.2; }
+    .r1 { animation: rip  2s infinite; }
+    .r2 { animation: rip2 2s .5s infinite; }
+
+    @keyframes cglow { 0%,100%{opacity:.2} 50%{opacity:.55} }
+    .cg-ring { animation: cglow 3.2s ease-in-out infinite; }
+
+    .drag-hint {
+      font-size: .6rem; font-weight: 500; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--dim); opacity: .45;
+      text-align: center; transition: opacity .2s;
+    }
+    .drag-hint.hidden { opacity: 0; pointer-events: none; }
+
+    /* skill info panel (appears below wheel on hover) */
+    #skill-panel {
+      padding: .75rem 1.2rem;
+      border-left: 2px solid var(--accent);
+      background: rgba(79,142,247,.06);
+      border-radius: 0 6px 6px 0;
+      opacity: 0; transform: translateY(4px);
+      transition: opacity .25s, transform .25s;
+      pointer-events: none;
+      min-width: 260px; max-width: min(480px, 88vw);
+    }
+    #skill-panel.show { opacity: 1; transform: translateY(0); }
+    .sip-tag  { font-size:.6rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:.3rem; }
+    .sip-name { font-size:1rem; font-weight:800; color:#fff; margin-bottom:.25rem; }
+    .sip-desc { font-size:.78rem; color:rgba(255,255,255,.45); line-height:1.6; }
+  </style>
+</head>
+<body>
+  <div id="wheel-wrap">
+    <div id="lens-wrap">
+      <svg id="lens-svg" viewBox="0 0 520 520" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="cgrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%"   stop-color="#4facfe"/>
+            <stop offset="42%"  stop-color="#1740a0"/>
+            <stop offset="100%" stop-color="#040b1e"/>
+          </radialGradient>
+          <radialGradient id="lshine" cx="32%" cy="28%" r="52%">
+            <stop offset="0%"   stop-color="rgba(255,255,255,0.48)"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+          </radialGradient>
+        </defs>
+        <circle cx="260" cy="260" r="252" fill="#060b1e" stroke="#12192e" stroke-width="2"/>
+        <circle cx="260" cy="260" r="243" fill="#080d20" stroke="rgba(255,255,255,0.035)" stroke-width="1"/>
+        <circle cx="260" cy="260" r="247" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1" stroke-dasharray="2.5 9"/>
+        <g id="petals-g" style="transform-origin:260px 260px"></g>
+        <circle cx="260" cy="260" r="83" fill="url(#cgrad)"/>
+        <circle class="cg-ring" cx="260" cy="260" r="91" fill="none" stroke="rgba(79,172,254,0.45)" stroke-width="5.5"/>
+        <circle cx="260" cy="260" r="83" fill="url(#lshine)"/>
+        <circle cx="260" cy="260" r="83" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+        <g id="hub-default" style="transition:opacity 0.3s;">
+          <text x="260" y="252" font-family="Montserrat,sans-serif" font-weight="900" font-size="11" fill="white" text-anchor="middle" letter-spacing="3" opacity=".95">MERN</text>
+          <text x="260" y="268" font-family="Montserrat,sans-serif" font-weight="900" font-size="11" fill="white" text-anchor="middle" letter-spacing="3" opacity=".95">STACK</text>
+        </g>
+        <g id="hub-hover" style="opacity:0;transition:opacity 0.3s;pointer-events:none;">
+          <rect id="hub-pill" x="230" y="228" width="60" height="14" rx="7" fill="rgba(79,142,247,0.25)"/>
+          <text id="hub-tag"  x="260" y="238.5" font-family="Montserrat,sans-serif" font-weight="700" font-size="6.5" fill="#4f8ef7" text-anchor="middle" letter-spacing="1.8"></text>
+          <text id="hub-name" x="260" y="256"   font-family="Montserrat,sans-serif" font-weight="800" font-size="13"  fill="white"   text-anchor="middle" letter-spacing="1"></text>
+          <text id="hub-d1"   x="260" y="270"   font-family="Montserrat,sans-serif" font-weight="400" font-size="7.5" fill="rgba(255,255,255,0.55)" text-anchor="middle"></text>
+          <text id="hub-d2"   x="260" y="280"   font-family="Montserrat,sans-serif" font-weight="400" font-size="7.5" fill="rgba(255,255,255,0.55)" text-anchor="middle"></text>
+        </g>
+        <path id="arc-bg" d="M570,260 A310,310 0 0,0 260,-50"/>
+        <path id="arc-fg" d="M570,260 A310,310 0 0,0 260,-50" stroke-dasharray="487" stroke-dashoffset="487"/>
+        <g id="thumb-g">
+          <circle class="rp r1" cx="570" cy="260"/>
+          <circle class="rp r2" cx="570" cy="260"/>
+          <circle id="arc-thumb" cx="570" cy="260" r="9" fill="#060b1f" stroke="#4facfe" stroke-width="2.2"/>
+        </g>
+      </svg>
+    </div>
+
+    <p class="drag-hint" id="drag-hint">↑ drag upward to open aperture</p>
+
+    <div id="skill-panel">
+      <div class="sip-tag"  id="sip-tag"></div>
+      <div class="sip-name" id="sip-name"></div>
+      <div class="sip-desc" id="sip-desc"></div>
+    </div>
+  </div>
+
+  <script>
+    const icons = {
+      HTML:    `<path d="M-9-11l2 22 7 2 7-2 2-22zm1.5 3.5h14l-.5 5.5h-6.5v3h6l-.8 8.5-5.7 1.6-5.7-1.6-.4-4.5h3.5l.2 2.3 2.4.6 2.4-.6.3-3.3h-9.7z" fill="white"/>`,
+      CSS:     `<path d="M-10-11l2 22 8 2 8-2 2-22zm2 3.5h13l-.5 5h-5.5v2.5h5l-.6 7-4.4 1.3-4.4-1.3-.3-3.5h3l.1 1.8 1.6.4 1.6-.4.2-2.8h-8.5z" fill="white"/>`,
+      Java:    `<path d="M-3 8c-4 1.5-7 1.2-5.5.2 4-2.5 9-7.5 6-11-3.5-4 1 5-6 8.8C-13 8.8-11 11-3 8zm5-14c2.5 4-1 7.5-8 10.5-5.5 2-1.5 5 0 5C-9 6-17 4-12.5 1-8 .5 6.5-5.5 2-6z" fill="white"/><path d="M-6 13c4 .5 11-.3 11-2.3 0-1-2-2-2-2s.5 1.5-9.5 2c-8.5.5-3 2.5.5 2.3z" fill="white"/>`,
+      DOM:     `<rect x="-11" y="-11" width="8" height="6" rx="1" fill="white"/><rect x="3" y="-11" width="8" height="6" rx="1" fill="white"/><rect x="-5" y="5" width="10" height="6" rx="1" fill="white"/><line x1="-7" y1="-5" x2="0" y2="5" stroke="white" stroke-width="1.5"/><line x1="7" y1="-5" x2="0" y2="5" stroke="white" stroke-width="1.5"/>`,
+      JS:      `<rect x="-11" y="-11" width="22" height="22" rx="2" fill="none" stroke="white" stroke-width="1.5"/><path d="M-5 4V-4h3v7.5c0 3-4.5 3.5-4.5 1" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M2-4h5l-2.5 4 2.5 4H2" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`,
+      React:   `<circle cx="0" cy="0" r="2.5" fill="white"/><ellipse cx="0" cy="0" rx="10" ry="4" fill="none" stroke="white" stroke-width="1.4"/><ellipse cx="0" cy="0" rx="10" ry="4" fill="none" stroke="white" stroke-width="1.4" transform="rotate(60)"/><ellipse cx="0" cy="0" rx="10" ry="4" fill="none" stroke="white" stroke-width="1.4" transform="rotate(120)"/>`,
+      Figma:   `<rect x="-7" y="-11" width="8" height="8" rx="2" fill="white" opacity=".9"/><rect x="1" y="-11" width="8" height="8" rx="4" fill="white" opacity=".7"/><rect x="-7" y="-3" width="8" height="8" rx="2" fill="white" opacity=".8"/><rect x="-7" y="5" width="8" height="8" rx="2" fill="white" opacity=".6"/><circle cx="5" cy="1" r="4" fill="white" opacity=".5"/>`,
+      GSAP:    `<path d="M-10 0 Q-5-10 0-5 Q5-10 10 0 Q5 10 0 5 Q-5 10-10 0z" fill="none" stroke="white" stroke-width="1.5"/><circle cx="0" cy="0" r="2.5" fill="white"/><path d="M0 0L8-4" stroke="white" stroke-width="2" stroke-linecap="round"/>`,
+      Express: `<text x="0" y="4" font-family="Montserrat,sans-serif" font-weight="900" font-size="9" fill="white" text-anchor="middle">EX</text>`,
+      Node:    `<polygon points="0,-11 9.5,5.5 -9.5,5.5" fill="none" stroke="white" stroke-width="1.5" stroke-linejoin="round"/><circle cx="0" cy="-4" r="2" fill="white"/><circle cx="-6" cy="4" r="2" fill="white"/><circle cx="6" cy="4" r="2" fill="white"/>`,
+      MongoDB: `<path d="M0-11c0 0-7 8-7 14a7 7 0 0014 0C7-3 0-11 0-11z" fill="none" stroke="white" stroke-width="1.5"/><line x1="0" y1="-2" x2="0" y2="12" stroke="white" stroke-width="1.5"/>`,
+      Tailwind:`<path d="M-10-2c1.5-6 5-9 10-8 5 1 6 5 4 8-1.5 6-5 9-10 8-5-1-6-5-4-8z" fill="none" stroke="white" stroke-width="1.5"/><path d="M0-2c1.5-6 5-9 10-8" fill="none" stroke="white" stroke-width="1.5"/>`,
+    };
+
+    const skills = [
+      { label:"HTML",    icon:icons.HTML,    desc:"Semantic markup, accessibility, SEO & modern HTML5 APIs",              tag:"MARKUP",    colors:["#4f8ef7","#3a72d4"] },
+      { label:"CSS",     icon:icons.CSS,     desc:"Grid, Flexbox, custom properties, animations & responsive design",     tag:"STYLING",   colors:["#ffffff","#d0d8f0"] },
+      { label:"Java",    icon:icons.Java,    desc:"OOP principles, data structures, algorithms & backend logic",           tag:"LANGUAGE",  colors:["#4f8ef7","#3a72d4"] },
+      { label:"DOM",     icon:icons.DOM,     desc:"Dynamic manipulation, events & browser APIs",                           tag:"BROWSER",   colors:["#ffffff","#d0d8f0"] },
+      { label:"JS",      icon:icons.JS,      desc:"ES6+, async/await, closures, functional patterns & modules",           tag:"LANGUAGE",  colors:["#4f8ef7","#3a72d4"] },
+      { label:"React",   icon:icons.React,   desc:"Hooks, context, custom hooks, SPA & Next.js SSR",                      tag:"FRONTEND",  colors:["#ffffff","#d0d8f0"] },
+      { label:"Figma",   icon:icons.Figma,   desc:"UI/UX design, prototyping, component libraries & systems",             tag:"DESIGN",    colors:["#4f8ef7","#3a72d4"] },
+      { label:"GSAP",    icon:icons.GSAP,    desc:"Timelines, ScrollTrigger, morphing & high-perf animations",            tag:"ANIMATION", colors:["#ffffff","#d0d8f0"] },
+      { label:"Express", icon:icons.Express, desc:"Routing, middleware, REST APIs, auth & error handling",                tag:"BACKEND",   colors:["#4f8ef7","#3a72d4"] },
+      { label:"Node",    icon:icons.Node,    desc:"Server runtime, streams, file system & npm ecosystem",                 tag:"RUNTIME",   colors:["#ffffff","#d0d8f0"] },
+      { label:"MongoDB", icon:icons.MongoDB, desc:"Document modeling, Atlas, aggregation pipelines & Mongoose",           tag:"DATABASE",  colors:["#4f8ef7","#3a72d4"] },
+      { label:"Tailwind",icon:icons.Tailwind,desc:"Utility-first CSS, responsive variants, dark mode & themes",           tag:"STYLING",   colors:["#ffffff","#d0d8f0"] },
+    ];
+
+    const N = skills.length, CX = 260, CY = 260, INNER = 96, OUTER = 228, ARC_R = 310, ARC_LEN = 487;
+    const petalsG  = document.getElementById('petals-g');
+    const arcFg    = document.getElementById('arc-fg');
+    const thumb    = document.getElementById('arc-thumb');
+    const lsvg     = document.getElementById('lens-svg');
+    const skillPanel = document.getElementById('skill-panel');
+    const dragHint = document.getElementById('drag-hint');
+    const hD       = document.getElementById('hub-default');
+    const hH       = document.getElementById('hub-hover');
+    const hTag     = document.getElementById('hub-tag');
+    const hName    = document.getElementById('hub-name');
+    const hD1      = document.getElementById('hub-d1');
+    const hD2      = document.getElementById('hub-d2');
+    const hPill    = document.getElementById('hub-pill');
+
+    let visible = 0, dragging = false, petalPaths = [], petalIcons = [];
+    let spinRaf, spinning = false, rot = 0;
+
+    function wd(desc, mc) {
+      const ws = desc.split(' '); let l1='', l2='';
+      for (const w of ws) {
+        if ((l1+' '+w).trim().length <= mc) l1=(l1+' '+w).trim();
+        else l2=(l2+' '+w).trim();
+      }
+      return [l1, l2];
+    }
+
+    skills.forEach((sk, i) => {
+      const sa = 360/N, deg = -90 + i*sa, nDeg = deg+sa, sw = sa*0.42;
+      function ptR(r,a){ const rad=a*Math.PI/180; return [CX+r*Math.cos(rad), CY+r*Math.sin(rad)] }
+      const [ix1,iy1]=ptR(INNER,deg), [ix2,iy2]=ptR(INNER,nDeg), [ox1,oy1]=ptR(OUTER,deg+sw), [ox2,oy2]=ptR(OUTER,nDeg+sw);
+      const la = sa>180?1:0;
+      const pathD = [`M${ix1},${iy1}`,`A${INNER},${INNER} 0 ${la},1 ${ix2},${iy2}`,`L${ox2},${oy2}`,`A${OUTER},${OUTER} 0 ${la},0 ${ox1},${oy1}`,`Z`].join(' ');
+      const gid='bg'+i, defs=lsvg.querySelector('defs');
+      const lg=document.createElementNS("http://www.w3.org/2000/svg","linearGradient");
+      lg.setAttribute("id",gid);
+      const ga=(deg+sa/2+90)*Math.PI/180;
+      lg.setAttribute("x1","0.5"); lg.setAttribute("y1","0.5");
+      lg.setAttribute("x2",(Math.cos(ga)/2+.5).toString()); lg.setAttribute("y2",(Math.sin(ga)/2+.5).toString());
+      lg.setAttribute("gradientUnits","objectBoundingBox");
+      const s1=document.createElementNS("http://www.w3.org/2000/svg","stop"); s1.setAttribute("offset","0%"); s1.setAttribute("stop-color",sk.colors[0]);
+      const s2=document.createElementNS("http://www.w3.org/2000/svg","stop"); s2.setAttribute("offset","100%"); s2.setAttribute("stop-color",sk.colors[1]);
+      lg.appendChild(s1); lg.appendChild(s2); defs.appendChild(lg);
+      const g=document.createElementNS("http://www.w3.org/2000/svg","g");
+      const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+      path.setAttribute("d",pathD); path.setAttribute("fill",`url(#${gid})`);
+      path.setAttribute("stroke","rgba(0,0,0,0.35)"); path.setAttribute("stroke-width","1.5");
+      path.classList.add("blade-path"); path.style.visibility="hidden";
+      const ma=deg+sa/2+sw*0.5, ir=INNER+(OUTER-INNER)*0.52;
+      const ix=CX+ir*Math.cos(ma*Math.PI/180), iy=CY+ir*Math.sin(ma*Math.PI/180);
+      const ic=i%2===0?"white":"#1e294f";
+      const iconG=document.createElementNS("http://www.w3.org/2000/svg","g");
+      iconG.setAttribute("transform",`translate(${ix},${iy})`);
+      iconG.innerHTML=sk.icon.replace(/fill="white"/g,`fill="${ic}"`).replace(/stroke="white"/g,`stroke="${ic}"`);
+      iconG.style.opacity="0"; iconG.style.transition="opacity 0.3s"; iconG.style.pointerEvents="none";
+      iconG.dataset.ix=ix; iconG.dataset.iy=iy;
+      g.appendChild(path); g.appendChild(iconG); petalsG.appendChild(g);
+      petalPaths.push(path); petalIcons.push({iconG});
+
+      path.addEventListener("mouseenter", () => {
+        if (i >= visible) return;
+        path.style.filter="brightness(1.18) drop-shadow(0 0 8px rgba(255,255,255,0.2))";
+        document.getElementById('sip-tag').textContent=sk.tag;
+        document.getElementById('sip-name').textContent=sk.label;
+        document.getElementById('sip-desc').textContent=sk.desc;
+        skillPanel.classList.add('show'); dragHint.classList.add('hidden');
+        hTag.textContent=sk.tag; hName.textContent=sk.label;
+        const [d1,d2]=wd(sk.desc,28); hD1.textContent=d1; hD2.textContent=d2;
+        const tw=sk.tag.length*4.5+14; hPill.setAttribute('x',260-tw/2); hPill.setAttribute('width',tw);
+        hD.style.opacity='0'; hH.style.opacity='1';
+      });
+      path.addEventListener("mouseleave", () => {
+        path.style.filter=""; skillPanel.classList.remove('show'); dragHint.classList.remove('hidden');
+        hD.style.opacity='1'; hH.style.opacity='0';
+      });
+    });
+
+    function arcPt(t){ const a=-(Math.PI/2)*t; return {x:CX+ARC_R*Math.cos(a), y:CY+ARC_R*Math.sin(a)} }
+    function setThumb(t){
+      const p=arcPt(t);
+      thumb.setAttribute("cx",p.x); thumb.setAttribute("cy",p.y);
+      document.querySelectorAll('.rp').forEach(c=>{c.setAttribute("cx",p.x);c.setAttribute("cy",p.y)});
+      arcFg.setAttribute("stroke-dashoffset", ARC_LEN*(1-t));
+    }
+    function reveal(count){
+      visible=Math.max(0,Math.min(N,count));
+      petalPaths.forEach((p,i)=>{
+        const s=i<visible;
+        p.style.visibility=s?"visible":"hidden";
+        petalIcons[i].iconG.style.opacity=s?"1":"0";
+      });
+      if(visible===N) startSpin(); else stopSpin();
+    }
+    function tFromPointer(e){
+      const rect=lsvg.getBoundingClientRect(), sc=520/rect.width;
+      const mx=(e.clientX-rect.left)*sc, my=(e.clientY-rect.top)*sc;
+      let best=0, bestD=Infinity;
+      for(let t=0;t<=1;t+=0.004){ const p=arcPt(t); const d=(p.x-mx)**2+(p.y-my)**2; if(d<bestD){bestD=d;best=t} }
+      return best;
+    }
+    thumb.addEventListener("pointerdown", e=>{ dragging=true; thumb.classList.add("dragging"); lsvg.setPointerCapture(e.pointerId); e.stopPropagation(); });
+    lsvg.addEventListener("pointermove", e=>{ if(!dragging)return; const t=tFromPointer(e); setThumb(t); reveal(Math.round(t*N)); });
+    lsvg.addEventListener("pointerup", ()=>{ dragging=false; thumb.classList.remove("dragging"); });
+    lsvg.addEventListener("wheel", e=>{ e.preventDefault(); const nv=visible+(e.deltaY>0?1:-1); setThumb(Math.max(0,Math.min(1,nv/N))); reveal(nv); }, {passive:false});
+
+    function startSpin(){
+      if(spinning)return; spinning=true;
+      (function step(){
+        rot+=0.022;
+        petalsG.style.transform=`rotate(${rot}deg)`;
+        petalIcons.forEach(({iconG})=>{
+          const x=parseFloat(iconG.dataset.ix), y=parseFloat(iconG.dataset.iy);
+          iconG.setAttribute("transform",`translate(${x},${y}) rotate(${-rot},0,0)`);
+        });
+        spinRaf=requestAnimationFrame(step);
+      })();
+    }
+    function stopSpin(){ if(!spinning)return; spinning=false; cancelAnimationFrame(spinRaf); }
+
+    setThumb(0); reveal(0);
+  </script>
+</body>
+</html>

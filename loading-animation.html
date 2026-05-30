@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ali Logo Animation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100vh;
+      background: #081123;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    svg {
+      width: 58px;
+      height: 143px;
+      display: block;
+    }
+
+    svg.glow {
+      animation: breathe 3.2s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.08));
+      }
+
+      50% {
+        filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.22));
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <svg viewBox="0 0 209.82 516.47" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!--
+        WRITE-ON MASK: 4 stroke paths matching the 4 directed arrows in Asset_1.svg
+        Purple(1): 126.69,235.21 → ~69,247  (arc left/down)
+        Green(2):   71.75,253.43 → ~172,239  (sweep right)
+        Yellow(3): 167.93,249.87 → ~61,192   (arc left/up)
+        Pink(4):    64.25,186.68 → ~202,276  (big sweep right to sword tail)
+        Each stroke expands the mask as it draws, revealing the calligraphy underneath.
+      -->
+      <mask id="ali-mask" maskUnits="userSpaceOnUse">
+        <!-- Always-white fill of the calligraphy shape — revealed as mask strokes paint over it -->
+        <path id="ali-fill" fill="white" opacity="0"
+          d="m198.49,290.36c.2.22.41.43.62.65-1.37,1.22-2.75,2.44-4.12,3.66-1.46,1.29-2.9,2.62-4.39,3.89-15.6,13.3-33.04,22.99-52,30.55-10.08,4.02-20.91,6.16-31.56,8.06-11.09,1.98-22.41,2.68-33.65,2.07-16.95-.91-34.45-4.48-48.55-14.42-8.45-5.96-14.98-14.15-19.13-23.6-5.18-11.75-6.66-24.15-5.14-36.83,2.66-21.97,10.83-41.65,25.38-58.49,10.48-12.16,23.32-21.03,38.33-26.73,1.23-.46,2.54-.72,4.03-1.13.85,7.28-1.81,13.37-5.16,19.17-3.09,5.36-6.62,10.43-9.72,15.77-6.09,10.48-7.64,21.19-.92,32.05,2.78,4.51,7.28,8.22,11.16,9.47-.16-13.54,4.15-25.88,9.91-37.83,1.54-3.19,3.31-6.08,5.31-8.64,1.34-1.71,2.79-3.27,4.34-4.68,6.07-5.53,13.73-8.72,23.11-9.33.82-.05,1.63-.07,2.46-.07,2,0,3.99.16,5.95.5,1.76.3,3.48.74,5.18,1.33,1.66.57,3.29,1.29,4.88,2.15,9.18,4.98,12.99,14.87,9.68,25.37-1.51,4.77-3.85,9.1-7.8,12.91-.14.15-.29.28-.43.42-.14-.71-.24-1.05-.26-1.38-.29-5.4-2.33-9.61-6.03-12.49-1.44-1.12-3.14-2.04-5.07-2.74-.73-.27-1.46-.51-2.18-.73-.52-.17-1.06-.34-1.59-.48-.62-.17-1.25-.33-1.88-.48-.63-.14-1.26-.28-1.89-.39-.98-.17-1.94-.33-2.92-.43-.6-.07-1.2-.13-1.8-.17-.94-.06-1.89-.1-2.83-.1-5.05,0-10.06.96-15.04,2.94-.37.15-.73.31-1.11.47-1.28.55-2.44,1.22-3.48,1.97-3.97,2.86-6.23,7.09-6.65,12.4-.56,7.01,2.35,12.8,8.51,15.79.01.02.04.03.06.04,1.58.76,3.2,1.46,4.85,2.09,4.27,1.66,8.74,2.91,13.21,3.69,1.17.2,2.33.37,3.5.53.31.04.61.08.91.11.9.12,1.79.22,2.69.3.31.03.62.06.93.09.98.08,1.96.14,2.93.19.19.01.39.03.58.03,1.21.06,2.42.09,3.63.09.2,0,.39-.01.59-.01.62-.01,1.24-.01,1.86-.03.37-.01.73-.03,1.1-.05.58-.02,1.15-.05,1.72-.09.31-.02.61-.04.91-.06.89-.07,1.77-.15,2.65-.24,1.57-.18,3.14-.4,4.71-.67,3.65-.63,7.28-1.53,10.89-2.69,13.59-4.42,25.29-11.82,35.09-22.22.68-.72,1.15-1.62,2.11-2.14.36,7.05-1.42,13.36-4.46,19.36-6.13,12.07-16.09,20.2-27.84,26.24-4.72,2.42-9.51,4.49-14.37,6.21-1.56.55-3.12,1.06-4.69,1.54-1.45.44-2.91.84-4.37,1.22-.42.11-.84.2-1.26.31-1.04.26-2.1.51-3.15.73-.5.11-1.01.21-1.51.31-.98.2-1.97.39-2.96.56-.52.09-1.05.17-1.57.26-1,.15-1.99.29-2.99.42-.51.07-1.02.14-1.52.2-1.11.12-2.22.23-3.33.32-.39.04-.78.08-1.18.11-1.5.11-3.01.2-4.52.25-.26.01-.52,0-.78.01-1.08.03-2.16.06-3.25.06-.2,0-.41-.01-.62-.01-.26,0-.53-.01-.79-.01-1.47-.02-2.94-.05-4.42-.12-1.59-.08-3.19-.19-4.8-.34-1.03-.09-2.07-.19-3.1-.31-10.32-1.17-20-4.41-28.47-10.77-8.25-6.2-12.11-14.61-12.7-24.63-.77-13.05,3.02-25.18,8.1-36.98.64-1.46,1.33-2.91,1.99-4.37-.19-.2-.38-.4-.57-.6-3.27,1.99-6.78,3.7-9.8,6.03-10,7.72-19.36,16.13-24.58,28.02-11.2,25.49-1.13,51.67,24.24,62.96,13.31,5.92,27.19,8.6,41.4,8.6.63,0,1.26-.01,1.9-.02,1.61-.02,3.22-.09,4.84-.18,1.95-.11,3.92-.27,5.88-.47,11.75-1.25,23.03-3.57,33.89-6.85,1.61-.49,3.2-.99,4.79-1.51,27.03-8.94,51.48-23.7,74.33-41.99,1.72-1.37,3.4-2.8,5.1-4.2-13.82,25.48-37.51,39.17-61.82,52.22,18.24-4.12,34.93-11.74,50.5-22h-.01Z" />
+
+        <!-- Purple(1): starts 126.69,235.21 → arrowhead ~69,247 -->
+        <path id="stroke-1" fill="none" stroke="white" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"
+          d="m126.69,235.21s11.8-39.95-28.7-31.7c-0.76,5.25-29.22,25.77-28.33,40.01" />
+
+        <!-- Green(2): starts 71.75,253.43 → arrowhead ~172,239 -->
+        <path id="stroke-2" fill="none" stroke="white" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"
+          d="m71.75,253.43s40.28,33.95,95.63-9.75" />
+
+        <!-- Yellow(3): starts 167.93,249.87 → arrowhead ~61,192 -->
+        <path id="stroke-3" fill="none" stroke="white" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"
+          d="m167.93,249.87c-14.82,21.48-64.3,35.81-106.67,17.12-10.34-4.56-15.25-16.64-15.97-27.91-.69-10.88,1.41-25.4,12.07-40.92" />
+
+        <!-- Pink(4): starts 64.25,186.68 → arrowhead ~202,276 (sword tail) -->
+        <path id="stroke-4" fill="none" stroke="white" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"
+          d="m64.25,186.68c-12.19,3.02-70.7,27.11-57.39,103.32,13.59,77.8,148.45,25.72,190.42-9.03" />
+      </mask>
+
+      <!-- Clip for blade reveal -->
+      <clipPath id="blade-clip">
+        <rect id="blade-rect" x="0" y="334" width="210" height="0" />
+      </clipPath>
+    </defs>
+
+    <!-- ① UPPER: Hilt drops from top -->
+    <g id="upper-part" style="opacity:0;">
+      <path fill="#ffffff"
+        d="m40.89,43.63c5.71,16.4,12.14,32.55,18.22,48.82,1.14,3.06,2.01,6.21,2.95,9.13-4.74,2.79-8.95,5.07-12.96,7.65-5.29,3.4-9.03,7.97-10.06,14.45-1.03,6.47,3.01,10.63,9.47,9.53,6.16-1.05,7.98-5.76,8.98-11.01.69-3.62,1.61-7.23,6.03-7.42,4.58-.2,3.78,4.18,4.48,6.7,6.89,24.83,11.14,50.42,13.95,76.16,6.42-5.09,14.26-7.96,23.34-8.55.91-.06,1.82-.09,2.71-.09,1.72,0,3.43.11,5.08.33-5.96-26.73-14.11-52.85-23.97-78.45-1.16-3.01-1.04-5.78,1.64-7.06,1.89-.9,4.82-.57,6.92.19,2.31.84,4.07,3.07,6.3,4.25,3.53,1.88,7.77,2.93,10.69-.18,2.13-2.27,3.78-6.08,3.64-9.11-.22-4.53-3.86-7.7-8.49-7.5-7.72.34-15.43,1.35-23.09,2.47-2.78.41-4.33.33-5.47-2.64-2.63-6.85-6-13.41-8.44-20.32-6.69-18.88-14.49-37.57-8.86-58.48,1.48-5.49-3.41-10.88-9.2-12.1-11.92-2.5-21.87,7.15-19.65,19.59,1.41,7.98,3.14,16.01,5.79,23.64h0Z" />
+    </g>
+
+    <!-- ② MIDDLE: Ali calligraphy revealed by 4-stroke write-on mask -->
+    <g id="middle-part" mask="url(#ali-mask)" style="opacity:0;">
+      <path fill="#ffffff"
+        d="m198.49,290.36c.2.22.41.43.62.65-1.37,1.22-2.75,2.44-4.12,3.66-1.46,1.29-2.9,2.62-4.39,3.89-15.6,13.3-33.04,22.99-52,30.55-10.08,4.02-20.91,6.16-31.56,8.06-11.09,1.98-22.41,2.68-33.65,2.07-16.95-.91-34.45-4.48-48.55-14.42-8.45-5.96-14.98-14.15-19.13-23.6-5.18-11.75-6.66-24.15-5.14-36.83,2.66-21.97,10.83-41.65,25.38-58.49,10.48-12.16,23.32-21.03,38.33-26.73,1.23-.46,2.54-.72,4.03-1.13.85,7.28-1.81,13.37-5.16,19.17-3.09,5.36-6.62,10.43-9.72,15.77-6.09,10.48-7.64,21.19-.92,32.05,2.78,4.51,7.28,8.22,11.16,9.47-.16-13.54,4.15-25.88,9.91-37.83,1.54-3.19,3.31-6.08,5.31-8.64,1.34-1.71,2.79-3.27,4.34-4.68,6.07-5.53,13.73-8.72,23.11-9.33.82-.05,1.63-.07,2.46-.07,2,0,3.99.16,5.95.5,1.76.3,3.48.74,5.18,1.33,1.66.57,3.29,1.29,4.88,2.15,9.18,4.98,12.99,14.87,9.68,25.37-1.51,4.77-3.85,9.1-7.8,12.91-.14.15-.29.28-.43.42-.14-.71-.24-1.05-.26-1.38-.29-5.4-2.33-9.61-6.03-12.49-1.44-1.12-3.14-2.04-5.07-2.74-.73-.27-1.46-.51-2.18-.73-.52-.17-1.06-.34-1.59-.48-.62-.17-1.25-.33-1.88-.48-.63-.14-1.26-.28-1.89-.39-.98-.17-1.94-.33-2.92-.43-.6-.07-1.2-.13-1.8-.17-.94-.06-1.89-.1-2.83-.1-5.05,0-10.06.96-15.04,2.94-.37.15-.73.31-1.11.47-1.28.55-2.44,1.22-3.48,1.97-3.97,2.86-6.23,7.09-6.65,12.4-.56,7.01,2.35,12.8,8.51,15.79.01.02.04.03.06.04,1.58.76,3.2,1.46,4.85,2.09,4.27,1.66,8.74,2.91,13.21,3.69,1.17.2,2.33.37,3.5.53.31.04.61.08.91.11.9.12,1.79.22,2.69.3.31.03.62.06.93.09.98.08,1.96.14,2.93.19.19.01.39.03.58.03,1.21.06,2.42.09,3.63.09.2,0,.39-.01.59-.01.62-.01,1.24-.01,1.86-.03.37-.01.73-.03,1.1-.05.58-.02,1.15-.05,1.72-.09.31-.02.61-.04.91-.06.89-.07,1.77-.15,2.65-.24,1.57-.18,3.14-.4,4.71-.67,3.65-.63,7.28-1.53,10.89-2.69,13.59-4.42,25.29-11.82,35.09-22.22.68-.72,1.15-1.62,2.11-2.14.36,7.05-1.42,13.36-4.46,19.36-6.13,12.07-16.09,20.2-27.84,26.24-4.72,2.42-9.51,4.49-14.37,6.21-1.56.55-3.12,1.06-4.69,1.54-1.45.44-2.91.84-4.37,1.22-.42.11-.84.2-1.26.31-1.04.26-2.1.51-3.15.73-.5.11-1.01.21-1.51.31-.98.2-1.97.39-2.96.56-.52.09-1.05.17-1.57.26-1,.15-1.99.29-2.99.42-.51.07-1.02.14-1.52.2-1.11.12-2.22.23-3.33.32-.39.04-.78.08-1.18.11-1.5.11-3.01.2-4.52.25-.26.01-.52,0-.78.01-1.08.03-2.16.06-3.25.06-.2,0-.41-.01-.62-.01-.26,0-.53-.01-.79-.01-1.47-.02-2.94-.05-4.42-.12-1.59-.08-3.19-.19-4.8-.34-1.03-.09-2.07-.19-3.1-.31-10.32-1.17-20-4.41-28.47-10.77-8.25-6.2-12.11-14.61-12.7-24.63-.77-13.05,3.02-25.18,8.1-36.98.64-1.46,1.33-2.91,1.99-4.37-.19-.2-.38-.4-.57-.6-3.27,1.99-6.78,3.7-9.8,6.03-10,7.72-19.36,16.13-24.58,28.02-11.2,25.49-1.13,51.67,24.24,62.96,13.31,5.92,27.19,8.6,41.4,8.6.63,0,1.26-.01,1.9-.02,1.61-.02,3.22-.09,4.84-.18,1.95-.11,3.92-.27,5.88-.47,11.75-1.25,23.03-3.57,33.89-6.85,1.61-.49,3.2-.99,4.79-1.51,27.03-8.94,51.48-23.7,74.33-41.99,1.72-1.37,3.4-2.8,5.1-4.2-13.82,25.48-37.51,39.17-61.82,52.22,18.24-4.12,34.93-11.74,50.5-22h-.01Z" />
+    </g>
+
+    <!-- Ink tip dot -->
+    <circle id="ink-tip" cx="0" cy="0" r="2.5" fill="white" opacity="0" />
+
+    <!-- ③ LOWER: Blade reveals top-to-bottom -->
+    <g id="lower-part" clip-path="url(#blade-clip)" style="opacity:0;">
+      <path fill="#ffffff"
+        d="m80.94,337.8c8.27-.07,16.53-.83,24.66-2.28,5.66-1.01,11.37-2.09,16.99-3.48-1,10.93-2.04,23.5-3.94,34.33-.2,1.29-.4,2.57-.59,3.85-.46,3.02-.83,6.05-1.38,9.04-1.02,5.41-2,10.84-3.27,16.19-1.75,7.43-3.61,14.85-5.7,22.19-1.48,5.23-3.27,10.37-5.16,15.46-2.07,5.54-4.29,11.03-6.67,16.43-1.93,4.4-4.06,8.72-6.33,12.95-1.93,3.59-3.92,7.17-6.03,10.68-.73,1.22-1.48,2.43-2.23,3.63-4.1,6.48-8.34,12.9-13.38,18.73-1.18,1.35-2.36,2.69-3.56,4.03-1.62,1.81-8.5,9-13.02,13.41-2.13,2.06-3.74,3.51-4.05,3.51.19-.35,3.77-6.02,3.96-6.38.6-1.08,1.22-2.16,1.84-3.24,1.86-3.3,3.74-6.58,5.5-9.95,2.36-4.52,4.55-9.12,6.72-13.74,2.15-4.58,4.39-9.15,6.22-13.87,3.01-7.77,5.96-15.59,8.51-23.52,2.24-6.96,4.04-14.06,5.83-21.15,2.64-10.49,5.53-31.92,5.53-31.92,0,0,.64-5.23.35-4.21-21.46,75.29-42.25,89.67-43.01,90.41,39.38-81.25,32.21-141.1,32.21-141.1h0Z" />
+    </g>
+  </svg>
+
+  <script>
+    const svg = document.querySelector('svg');
+    const upperPart = document.getElementById('upper-part');
+    const middlePart = document.getElementById('middle-part');
+    const aliFill = document.getElementById('ali-fill');
+    const inkTip = document.getElementById('ink-tip');
+    const bladeRect = document.getElementById('blade-rect');
+    const lowerPart = document.getElementById('lower-part');
+
+    // The 4 stroke paths in draw order: Purple→Green→Yellow→Pink
+    const strokeIds = ['stroke-1', 'stroke-2', 'stroke-3', 'stroke-4'];
+    const strokes = strokeIds.map(id => document.getElementById(id));
+    let lengths = [];  // measured on init
+
+    // Easing
+    function easeOutBack(t) { return 1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2); }
+    function easeInOutSine(t) { return -(Math.cos(Math.PI * t) - 1) / 2; }
+    function easeOutQuart(t) { return 1 - Math.pow(1 - t, 4); }
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+    let rafs = [], timers = [];
+    function stopAll() {
+      rafs.forEach(cancelAnimationFrame); rafs = [];
+      timers.forEach(clearTimeout); timers = [];
+    }
+
+    function animate(delayMs, durMs, easeFn, tick, done) {
+      const id = setTimeout(() => {
+        const t0 = performance.now();
+        function step(now) {
+          const t = Math.min((now - t0) / durMs, 1);
+          tick(easeFn(t), t);
+          if (t < 1) rafs.push(requestAnimationFrame(step));
+          else if (done) done();
+        }
+        rafs.push(requestAnimationFrame(step));
+      }, delayMs);
+      timers.push(id);
+    }
+
+    // Animate one stroke (index i) drawing forward, ink tip tracking along it
+    // Returns the duration so next stroke can chain
+    function drawStroke(strokeEl, len, delayMs, durMs, onDone) {
+      // Start fully hidden
+      strokeEl.setAttribute('stroke-dasharray', String(len));
+      strokeEl.setAttribute('stroke-dashoffset', String(len));
+      animate(delayMs, durMs, easeInOutSine, (e, t) => {
+        // dashoffset len→0 = draw forward
+        strokeEl.setAttribute('stroke-dashoffset', String(len * (1 - e)));
+        try {
+          const pt = strokeEl.getPointAtLength(e * len);
+          inkTip.setAttribute('cx', pt.x);
+          inkTip.setAttribute('cy', pt.y);
+          // Fade tip out near end of each stroke
+          inkTip.setAttribute('opacity', t < 0.88 ? '1' : String((1 - t) / 0.12));
+        } catch (_) { }
+      }, () => {
+        inkTip.setAttribute('opacity', '0');
+        if (onDone) onDone();
+      });
+    }
+
+    function play() {
+      stopAll();
+      svg.classList.remove('glow');
+
+      // Reset all
+      upperPart.style.cssText = 'opacity:0;transform:translateY(-150px);';
+      middlePart.style.opacity = '0';
+      aliFill.setAttribute('opacity', '0');
+      inkTip.setAttribute('opacity', '0');
+      bladeRect.setAttribute('height', '0');
+      lowerPart.style.opacity = '0';
+      strokes.forEach((s, i) => {
+        s.setAttribute('stroke-dasharray', String(lengths[i] || 0));
+        s.setAttribute('stroke-dashoffset', String(lengths[i] || 0));
+      });
+
+      // ① Upper part: drop with bounce  (0.28s delay, 0.68s)
+      animate(280, 680, easeOutBack, (e) => {
+        upperPart.style.transform = `translateY(${(1 - Math.max(e, 0)) * -150}px)`;
+        upperPart.style.opacity = String(Math.min(e * 3.5, 1));
+      });
+
+      // ② Middle: 4 strokes in sequence, each ~320ms, total ~1300ms
+      //    Strokes overlap slightly into the mask as they draw,
+      //    revealing the calligraphy behind them.
+      const strokeDur = 320;   // ms per stroke
+      const strokeGap = 30;    // tiny pause between strokes
+      const middleStart = 900;
+
+      middlePart.style.opacity = '1';  // show the calligraphy group (masked invisible until strokes paint)
+
+      // Show ink tip at start position of stroke-1
+      try {
+        const p0 = strokes[0].getPointAtLength(0);
+        inkTip.setAttribute('cx', p0.x);
+        inkTip.setAttribute('cy', p0.y);
+      } catch (_) { }
+
+      function chainStroke(i, delay) {
+        if (i >= strokes.length) {
+          // All 4 strokes done — fade in the solid fill
+          animate(60, 300, easeOutCubic, (e) => {
+            aliFill.setAttribute('opacity', String(e));
+          });
+          return;
+        }
+        // Show ink tip at start of this stroke before it begins
+        const id = setTimeout(() => {
+          try {
+            const p0 = strokes[i].getPointAtLength(0);
+            inkTip.setAttribute('cx', p0.x);
+            inkTip.setAttribute('cy', p0.y);
+            inkTip.setAttribute('opacity', '1');
+          } catch (_) { }
+        }, delay);
+        timers.push(id);
+
+        drawStroke(strokes[i], lengths[i], delay, strokeDur, () => {
+          chainStroke(i + 1, strokeGap);
+        });
+      }
+
+      chainStroke(0, middleStart);
+
+      // ③ Lower part: blade reveal  — starts after middle finishes (~middleStart + 4*strokeDur + gaps + settle)
+      const bladeStart = middleStart + 4 * (strokeDur + strokeGap) + 400;
+      animate(bladeStart, 600, easeOutQuart, (e) => {
+        lowerPart.style.opacity = '1';
+        bladeRect.setAttribute('height', String(e * 179.46));
+      }, () => {
+        timers.push(setTimeout(() => {
+          svg.classList.add('glow');
+          // Brief pause on completed logo, then loop
+          timers.push(setTimeout(() => {
+            svg.classList.remove('glow');
+            play();
+          }, 1800));
+        }, 120));
+      });
+    }
+
+    function init() {
+      lengths = strokes.map(s => s.getTotalLength());
+      strokes.forEach((s, i) => {
+        s.setAttribute('stroke-dasharray', String(lengths[i]));
+        s.setAttribute('stroke-dashoffset', String(lengths[i]));
+      });
+      play();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    // Click stops the loop
+    document.addEventListener('click', () => {
+      stopAll();
+      svg.classList.remove('glow');
+    });
+  </script>
+</body>
+
+</html>

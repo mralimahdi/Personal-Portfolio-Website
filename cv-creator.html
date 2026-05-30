@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Creator Dashboard – Syed Ali Mahdi Jaffri</title>
+  <!-- Google Fonts Montserrat & JetBrains Mono -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
+  <!-- html2canvas and jsPDF for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- External Stylesheet -->
+  <link rel="stylesheet" href="cv-creator-style.css">
+</head>
+
+<body>
+
+  <!-- CUSTOM CURSOR -->
+  <div id="cur"></div>
+  <div id="cur-ring"></div>
+
+  <!-- PARTICLES BACKGROUND CANVAS -->
+  <canvas class="login-particles" id="particles"></canvas>
+
+  <!-- ═══ CV CREATOR DASHBOARD SHELL ═══ -->
+  <div id="dashboard">
+    <nav class="dash-nav">
+      <div class="brand">
+        CV Creator Dashboard
+        <span>Interactive Resume Builder</span>
+      </div>
+      <div class="nav-controls">
+        <button class="btn-control-tab active" onclick="switchView('split', this)">🖥️ Split View</button>
+        <button class="btn-control-tab" onclick="switchView('editor', this)">✏️ Editor Only</button>
+        <button class="btn-control-tab" onclick="switchView('preview', this)">👁️ Preview Only</button>
+        <button class="btn-reset" onclick="resetToDefault()">🔄 Reset Template</button>
+        <a href="index.html" class="btn-back">← Back to Portfolio</a>
+      </div>
+    </nav>
+
+    <div class="dash-main">
+      <!-- Editor Sidebar (CV Sections selector) -->
+      <aside class="editor-sidebar" id="editor-sidebar">
+        <div class="sidebar-header">
+          <h3>CV Sections</h3>
+        </div>
+        <div class="section-nav" id="section-nav"></div>
+      </aside>
+
+      <!-- Editor Panel Area (Dynamic Form content) -->
+      <div class="editor-content-container" id="editor-content-container">
+        <div class="editor-content-scroll" id="editor-content">
+          <!-- Dynamic forms loaded here via Javascript -->
+        </div>
+      </div>
+
+      <!-- CV Live Preview Area -->
+      <div class="cv-preview-wrap" id="cv-preview-wrap">
+        <div class="cv-preview-toolbar">
+          <button class="btn-download" onclick="downloadPDF()">
+            <svg viewBox="0 0 24 24">
+              <path d="M5 20h14v-2H5v2zm7-18L5.33 9h3.84v4h5.66V9h3.84L12 2z" />
+            </svg>
+            Download PDF
+          </button>
+          <span class="preview-scale-note">Live Preview · Auto-saves Edits</span>
+        </div>
+        <!-- Renders the actual CV sheet -->
+        <div class="cv-sheet-container">
+          <div id="cv-render"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Notification Toast -->
+  <div class="save-toast" id="save-toast">✓ Changes saved!</div>
+
+  <!-- Separate Javascript Logic -->
+  <script src="cv-creator-script.js" defer></script>
+</body>
+
+</html>
