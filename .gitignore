@@ -1,5 +1,3 @@
-# ─── Private Config (contains API keys) ───
-config.js
 
 # ─── Environment files ───
 .env
